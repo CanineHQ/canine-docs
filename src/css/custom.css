@@ -1,0 +1,118 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #2e8555;
+  --ifm-color-primary-dark: #29784c;
+  --ifm-color-primary-darker: #277148;
+  --ifm-color-primary-darkest: #205d3b;
+  --ifm-color-primary-light: #33925d;
+  --ifm-color-primary-lighter: #359962;
+  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #25c2a0;
+  --ifm-color-primary-dark: #21af90;
+  --ifm-color-primary-darker: #1fa588;
+  --ifm-color-primary-darkest: #1a8870;
+  --ifm-color-primary-light: #29d5b0;
+  --ifm-color-primary-lighter: #32d8b4;
+  --ifm-color-primary-lightest: #4fddbf;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Alert Components */
+.alert {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.alert p {
+  margin: 0;
+}
+
+.alert::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+  background-size: 12px;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-top: 2px;
+}
+
+.alert-success {
+  background-color: #f0f9f0;
+  color: #1a1a1a;
+}
+
+.alert-success::before {
+  background-color: #10b981;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+}
+
+.alert-error {
+  background-color: #fef2f2;
+  color: #1a1a1a;
+}
+
+.alert-error::before {
+  background-color: #ef4444;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");
+}
+
+.alert-info {
+  background-color: #eff6ff;
+  color: #1a1a1a;
+}
+
+.alert-info::before {
+  background-color: #3b82f6;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/%3E%3C/svg%3E");
+}
+
+.alert-warning {
+  background-color: #fffbeb;
+  color: #1a1a1a;
+}
+
+.alert-warning::before {
+  background-color: #f59e0b;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z'/%3E%3C/svg%3E");
+}
+
+/* Dark mode adjustments */
+[data-theme='dark'] .alert-success {
+  background-color: #064e3b;
+  color: #f9fafb;
+}
+
+[data-theme='dark'] .alert-error {
+  background-color: #450a0a;
+  color: #f9fafb;
+}
+
+[data-theme='dark'] .alert-info {
+  background-color: #1e3a8a;
+  color: #f9fafb;
+}
+
+[data-theme='dark'] .alert-warning {
+  background-color: #451a03;
+  color: #f9fafb;
+}
