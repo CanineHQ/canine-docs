@@ -4,9 +4,9 @@ Canine relies heavily on Kubernetes, so we've made a little crash course on how 
 
 
 
-1. [Introduction to Kubernetes](kubernetes-crash-course/introduction)
-2. [Containers & Pods](kubernetes-crash-course/containers-and-pods)
-3. [Deployments](kubernetes-crash-course/deployments)
-4. [Namespaces](kubernetes-crash-course/namespaces)
-5. [Services](kubernetes-crash-course/services)
-6. [Ingress](kubernetes-crash-course/ingress)
+1. [Introduction to Kubernetes](./01-introduction-to-kubernetes.md)
+2. [Containers & Pods](./02-containers-pods.md)
+3. [Deployments](./03-deployments.md)
+4. [Namespaces](./04-namespaces.md)
+5. [Services](./05-services.md)
+6. [Ingress](./06-ingress.md)

@@ -18,7 +18,7 @@ Dive deep into how Canine works under the hood. Learn about:
 - Security and networking architecture
 - Deployment strategies and best practices
 
-### [Kubernetes Crash Course](./02-kubernetes-crash-course/)
+### [Kubernetes Crash Course](./02-kubernetes-crash-course/index.md)
 A comprehensive guide to Kubernetes fundamentals, perfect for developers who want to understand the platform powering their applications:
 - Introduction to Kubernetes concepts
 - Understanding containers and pods
@@ -42,4 +42,4 @@ While we've designed this content to be accessible, you'll get the most out of i
 - Familiarity with web application deployment
 - Some experience with command-line tools
 
-Ready to dive deep? Start with [Canine Architecture](./01-canine-architecture.md) or jump into our [Kubernetes Crash Course](./02-kubernetes-crash-course/).
+Ready to dive deep? Start with [Canine Architecture](./01-canine-architecture.md) or jump into our [Kubernetes Crash Course](./02-kubernetes-crash-course/index.md).

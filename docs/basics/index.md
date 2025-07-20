@@ -14,9 +14,9 @@ Welcome to the Basics section of Canine documentation. This section covers the f
 ### [Clusters](./01-clusters.md)
 Learn how to connect and manage Kubernetes clusters with Canine. Understand cluster configuration, authentication, and best practices for multi-cluster deployments.
 
-### [Projects](./02-projects/)
+### [Projects](./02-projects/index.md)
 Discover how to organize and deploy your applications:
-- **[Services](./02-projects/01-services/)** - Deploy web services, background workers, and cron jobs
+- **[Services](./02-projects/01-services/index.md)** - Deploy web services, background workers, and cron jobs
 - **[Processes and One-off Pods](./02-projects/02-processes-and-one-off-pods.md)** - Run temporary tasks and debugging sessions
 - **[Volumes](./02-projects/03-volumes.md)** - Manage persistent storage for your applications
 
