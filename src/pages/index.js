@@ -3,6 +3,7 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
+import HomepageContent from '@site/src/components/HomepageContent.mdx';
 
 import Heading from '@theme/Heading';
 import styles from './index.module.css';
@@ -37,6 +38,9 @@ export default function Home() {
       <HomepageHeader />
       <main>
         <HomepageFeatures />
+        <div className="container margin-top--xl margin-bottom--lg">
+          <HomepageContent />
+        </div>
       </main>
     </Layout>
   );

@@ -1,3 +1,10 @@
+---
+id: getting-started-index
+title: Quickstart
+sidebar_label: Quickstart
+sidebar_position: 0
+---
+
 # Quickstart
 
 In this quickstart guide, we're going to deploy a real time, [collaborative whiteboard application](https://whiteboard.canine.sh).

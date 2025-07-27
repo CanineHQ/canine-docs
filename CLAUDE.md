@@ -27,7 +27,7 @@ This is a Docusaurus v3.8.1 documentation website for Canine - a Kubernetes depl
 ### Documentation Organization
 The documentation is structured into three main sections:
 
-1. **Getting Started** (`docs/getting-started/`) - 7-step tutorial for new users
+1. **Getting Started** (`docs/getting-started/index`) - 7-step tutorial for new users
 2. **Basics** (`docs/basics/`) - Core concepts (clusters, projects, processes, volumes, etc.)
 3. **Technical Details** (`docs/technical-details/`) - Architecture and Kubernetes crash course
 
