@@ -17,13 +17,4 @@ And ideally, you want to do all the behind-the-scenes replications within a priv
 
 The architecture we'll set up in this guide is a modern stack that does all of these.
 
-### Installing Clickhouse
-
-Clickhouse is a supported 
-
-### Installing Airbyte
-Connect to the Airbyte UI via Telepresence.
-
-Configure the  
-
-### Installing Metabase
+<div class="alert alert-warning">This guide is a work in progress, more coming soon</div>
