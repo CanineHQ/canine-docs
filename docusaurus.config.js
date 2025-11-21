@@ -14,6 +14,7 @@ const config = {
   tagline: 'API, SDK, and CLI for Canine: An Open-Source Alternative to Heroku, Render, Fly.io, etc',
   favicon: 'img/favicon.ico',
 
+  staticDirectories: ['static','swagger'],
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
     v4: true, // Improve compatibility with the upcoming Docusaurus v4
@@ -76,6 +77,11 @@ const config = {
             sidebarId: 'tutorialSidebar',
             position: 'left',
             label: 'Documentation',
+          },
+          {
+            type: 'html',
+            value: '<a href="/swagger/page.html" target="_blank">API Reference</a>',
+            position: 'left',
           },
           {
             href: 'https://github.com/czhu12/canine',
