@@ -2,7 +2,7 @@
 sidebar_position: 0
 ---
 
-# Deploying a modern data stack with Canine
+# Deploying a modern data stack
 
 In this guide, you'll learn how to deploy a data stack with
 * Clickhouse (for warehousing)
