@@ -14,6 +14,6 @@ Navigate back to **Projects** **→ Whiteboarder → Environment** and set the `
 
 Then redeploy the application.
 
-<div class="alert alert-info">
+:::info
 Make sure to redeploy the application after any settings changes. This is how Canine knows to apply the changes to your underlying Kubernetes cluster (we never apply any changes to your cluster without a deployment)
-</div>
+:::

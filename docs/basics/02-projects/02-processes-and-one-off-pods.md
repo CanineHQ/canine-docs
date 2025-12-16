@@ -4,8 +4,6 @@ Often, you will want to start a shell to access your application. Canine hands t
 
 You need to install `kubectl`, and ensure setting the `KUBECONFIG` variable to the path of the clusters Kubeconfig file.
 
-<div class="alert alert-info">
-  <div>
-  Tip: If you put the kubeconfig.yml file at ~/.kube/config, you won't need to prepend the `KUBECONFIG` environment variable. `cp /path/to/kubeconfig ~/.kube/config`
-  </div>
-</div>
+:::tip
+If you put the kubeconfig.yml file at ~/.kube/config, you won't need to prepend the `KUBECONFIG` environment variable. `cp /path/to/kubeconfig ~/.kube/config`
+:::

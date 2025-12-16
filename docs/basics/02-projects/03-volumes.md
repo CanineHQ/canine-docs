@@ -1,8 +1,8 @@
 # Volumes
 
-<div class="alert alert-danger">
+:::danger
 Volumes are only supported for single node based deployments, due to how volumes are attached.
-</div>
+:::
 
 Applications in Canine run within containers that delete all filesystem changes on each restart. 
 

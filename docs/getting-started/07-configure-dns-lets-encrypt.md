@@ -12,9 +12,9 @@ Add the A record to your DNS configuration. In this case, we're using Cloudflare
 
 **Make sure to redeploy the application,** and canine will automatically start trying to provision an SSL certificate for you.
 
-<div class="alert alert-info">
+:::info
 It might take 20-30 minutes to issue a certificate, so feel free to take coffee break at this point!
-</div>
+:::
 
 Hooray! You should be able to now navigate to `whiteboarder.<your-domainname>` and see the app, live on the internet with a valid SSL certificate issued!
 
