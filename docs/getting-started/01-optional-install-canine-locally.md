@@ -2,9 +2,9 @@
 
 
 
-<div class="alert alert-success">
+:::tip
 If you're using the [cloud version](https://canine.sh) of Canine, you can skip this.
-</div>
+:::
 
 Make sure you have docker compose installed on your local machine before continuing. Make sure you can run `docker compose` successfully before continuing.
 

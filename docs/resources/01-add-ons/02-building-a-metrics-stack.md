@@ -9,4 +9,6 @@ In this guide, we'll build a metrics stack that is similar to Datadog by combini
 * Grafana (metrics querying UI)
 * Prometheus (timeseries database)
 
-<div class="alert alert-warning">This guide is a work in progress, more coming soon</div>
+:::warning
+This guide is a work in progress, more coming soon
+:::
