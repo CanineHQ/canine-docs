@@ -23,9 +23,6 @@ Discover how to organize and deploy your applications:
 ### [Add-ons](./03-add-ons.md)
 Extend your applications with pre-configured add-ons like databases, caching systems, and monitoring tools.
 
-### [Integrations](./04-integrations.md)
-Connect Canine with external services and tools to enhance your deployment workflow.
-
 ## Getting Started
 
 If you're new to Canine, we recommend starting with the [Getting Started guide](/docs/getting-started/) to set up your first deployment. Once you're comfortable with the basics, return here to deepen your understanding of each component.
