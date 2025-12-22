@@ -22,11 +22,11 @@ k3d cluster create canine-local --api-port 6550 -p "80:80@loadbalancer" -p "443:
 k3d kubeconfig get canine-local
 ```
 
-## Connect to Canine
+## Upload Kubeconfig to Canine
 
 1. Navigate to **Clusters → + New Cluster**
-2. Give your cluster a name and select **Existing Cluster**
-3. Paste the kubeconfig output from the previous step
-4. Create the cluster
+2. Give your cluster a name
+3. Upload your Kubeconfig file to Canine.
+<figure><img src="/img/install/upload-kubeconfig.png" alt=""/><figcaption></figcaption></figure>
 
 Canine will install the necessary dependencies to your cluster.

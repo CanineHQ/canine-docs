@@ -34,7 +34,7 @@ To install for AWS, we recommend using Portainer to maintain a persistent cluste
 ## Upload Kubeconfig to Canine
 
 1. Navigate to **Clusters → + New Cluster**
-2. Give your cluster a name and select **Existing Cluster**
+2. Give your cluster a name
 3. Upload your Kubeconfig file to Canine.
 <figure><img src="/img/install/upload-kubeconfig.png" alt=""/><figcaption></figcaption></figure>
 
