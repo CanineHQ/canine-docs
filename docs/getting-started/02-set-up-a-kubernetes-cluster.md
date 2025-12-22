@@ -16,10 +16,14 @@ Give your cluster a name, and select **Single VPS Installation.**
 
 In this case, our demo server is **5.161.197.8**. SSH into the server and run the commands shown on Canine, which will prepare the server for canine.
 
+![After entering IP](/img/install/vps/after-ip.png)
+
 ```bash
-curl -sfL https://get.k3s.io | sh -s - --disable traefik
+curl -sfL https://get.k3s.io | sh -s - --disable traefik --tls-san <your-server-ip>
 sudo cat /etc/rancher/k3s/k3s.yaml
 # Copy the output and paste into Canine.
 ```
+
+![Cluster setup success](/img/install/vps/success.png)
 
 Create the cluster, and Canine will start installing dependencies to the cluster.
