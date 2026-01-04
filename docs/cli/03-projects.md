@@ -12,10 +12,10 @@ canine projects list
 
 Output:
 ```
-| ID | CLUSTER_ID | NAME        | NAMESPACE      | REPOSITORY_URL                    | BRANCH | STATUS   |
-|----|------------|-------------|----------------|-----------------------------------|--------|----------|
-| 1  | 5          | my-app      | my-app-prod    | github.com/user/my-app            | main   | Deployed |
-| 2  | 5          | api-service | api-service-ns | github.com/user/api-service       | main   | Deployed |
+| ID | NAME        | NAMESPACE      | REPOSITORY_URL              | BRANCH | STATUS   | CLUSTER_ID | CLUSTER_NAME |
+|----|-------------|----------------|-----------------------------|--------|----------|------------|--------------|
+| 1  | my-app      | my-app-prod    | github.com/user/my-app      | main   | Deployed | 5          | production   |
+| 2  | api-service | api-service-ns | github.com/user/api-service | main   | Deployed | 5          | production   |
 ```
 
 ### Project Status Values
@@ -107,7 +107,7 @@ The run command requires `kubectl` to be installed on your machine. See [Install
 View running pods/processes for a project:
 
 ```bash
-canine projects processes --project <PROJECT>
+canine projects processes --project my-app
 ```
 
 Output:

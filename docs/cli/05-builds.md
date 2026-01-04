@@ -24,15 +24,15 @@ Output:
 List builds for a specific project:
 
 ```bash
-canine builds list <PROJECT_ID>
+canine builds list <PROJECT>
 ```
 
 Example:
 ```bash
-canine builds list 1
+canine builds list my-app
 ```
 
-This shows only builds for project ID 1.
+This shows only builds for the `my-app` project.
 
 ## Kill a Build
 
@@ -60,7 +60,7 @@ A typical deployment workflow using the CLI:
 
 2. **Monitor the build**
    ```bash
-   canine builds list 1
+   canine builds list my-app
    ```
 
 3. **Cancel if needed**

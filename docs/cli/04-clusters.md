@@ -40,7 +40,7 @@ Output:
 Download the kubeconfig file for direct `kubectl` access to a cluster:
 
 ```bash
-canine clusters download-kubeconfig --cluster <CLUSTER_ID>
+canine clusters download-kubeconfig --cluster <CLUSTER>
 ```
 
 The kubeconfig is saved to `~/.canine/kubeconfig.yaml`.
@@ -48,7 +48,7 @@ The kubeconfig is saved to `~/.canine/kubeconfig.yaml`.
 ### Example
 
 ```bash
-canine clusters download-kubeconfig --cluster 1
+canine clusters download-kubeconfig --cluster production
 ```
 
 Output:
