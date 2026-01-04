@@ -1,16 +1,18 @@
 # Authentication
 
-The Canine CLI uses API tokens for authentication. Tokens are stored locally in `~/.k9/canine.yaml`.
+The Canine CLI uses API tokens for authentication. Tokens are stored locally in `~/.canine/canine.yaml`.
 
 ## Login
 
 Authenticate with your API token:
 
 ```bash
-k9 auth login --token <YOUR_API_TOKEN>
+canine auth login --token <YOUR_API_TOKEN>
 ```
 
-You can obtain an API token from the Canine dashboard under Account Settings.
+To create an API token, go to **Accounts → Credentials → API Tokens** in the Canine dashboard.
+
+![API Tokens page](/img/cli/api-tokens.png)
 
 ### Options
 
@@ -23,7 +25,7 @@ You can obtain an API token from the Canine dashboard under Account Settings.
 ### Example
 
 ```bash
-k9 auth login --token abc123xyz
+canine auth login --token abc123xyz
 ```
 
 Output:
@@ -36,7 +38,7 @@ Logged in as user@example.com
 View your current authentication status:
 
 ```bash
-k9 auth status
+canine auth status
 ```
 
 Output:
@@ -56,10 +58,10 @@ Available accounts:
 Clear your stored credentials:
 
 ```bash
-k9 auth logout
+canine auth logout
 ```
 
-This removes the `~/.k9/canine.yaml` configuration file.
+This removes the `~/.canine/canine.yaml` configuration file.
 
 ## Multi-Account Support
 
@@ -68,25 +70,25 @@ If you have access to multiple accounts (teams or organizations), you can switch
 ### View Available Accounts
 
 ```bash
-k9 auth status
+canine auth status
 ```
 
 ### Switch Account
 
 ```bash
-k9 accounts change-account <ACCOUNT_SLUG>
+canine accounts change-account <ACCOUNT_SLUG>
 ```
 
 Example:
 ```bash
-k9 accounts change-account my-team
+canine accounts change-account my-team
 ```
 
 After switching, all subsequent commands will operate on the selected account.
 
 ## Credential Storage
 
-Credentials are stored in `~/.k9/canine.yaml`:
+Credentials are stored in `~/.canine/canine.yaml`:
 
 ```yaml
 host: https://canine.sh

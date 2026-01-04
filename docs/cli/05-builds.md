@@ -7,7 +7,7 @@ View and manage your project builds.
 View all builds across your account:
 
 ```bash
-k9 builds list
+canine builds list
 ```
 
 Output:
@@ -24,12 +24,12 @@ Output:
 List builds for a specific project:
 
 ```bash
-k9 builds list <PROJECT_ID>
+canine builds list <PROJECT_ID>
 ```
 
 Example:
 ```bash
-k9 builds list 1
+canine builds list 1
 ```
 
 This shows only builds for project ID 1.
@@ -39,12 +39,12 @@ This shows only builds for project ID 1.
 Stop a running build:
 
 ```bash
-k9 builds kill <BUILD_ID>
+canine builds kill <BUILD_ID>
 ```
 
 Example:
 ```bash
-k9 builds kill 42
+canine builds kill 42
 ```
 
 This immediately terminates the build process. Use this when you need to cancel a build that's in progress.
@@ -55,20 +55,20 @@ A typical deployment workflow using the CLI:
 
 1. **Trigger a deployment**
    ```bash
-   k9 projects deploy --name my-app
+   canine projects deploy --project my-app
    ```
 
 2. **Monitor the build**
    ```bash
-   k9 builds list 1
+   canine builds list 1
    ```
 
 3. **Cancel if needed**
    ```bash
-   k9 builds kill 42
+   canine builds kill 42
    ```
 
 4. **Verify processes are running**
    ```bash
-   k9 projects processes --project my-app
+   canine projects processes --project my-app
    ```

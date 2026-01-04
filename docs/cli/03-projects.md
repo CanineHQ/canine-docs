@@ -7,7 +7,7 @@ Manage your Canine projects from the command line.
 View all projects in your account:
 
 ```bash
-k9 projects list
+canine projects list
 ```
 
 Output:
@@ -31,50 +31,62 @@ Output:
 Trigger a deployment for a project:
 
 ```bash
-k9 projects deploy --name <PROJECT_NAME>
+canine projects deploy --project <PROJECT>
 ```
 
 ### Options
 
 | Option | Description |
 |--------|-------------|
-| `--name <NAME>` | Project name (required) |
+| `--project <PROJECT>` | Project name (required) |
 | `--skip-build` | Skip the build step and deploy existing image |
 
 ### Examples
 
 Deploy with a new build:
 ```bash
-k9 projects deploy --name my-app
+canine projects deploy --project my-app
 ```
 
 Deploy without rebuilding:
 ```bash
-k9 projects deploy --name my-app --skip-build
+canine projects deploy --project my-app --skip-build
 ```
 
 Output:
 ```
-Message: Deployment started    Build ID: 42
+Build started
+View deployment: https://canine.sh/projects/my-app/deployments/abc123
 ```
 
-## Interactive Shell
+## Run Commands
 
-Open an interactive shell in your project's container:
+Run any command in your project's environment:
 
 ```bash
-k9 projects shell --project <PROJECT>
+canine projects run --project <PROJECT> <COMMAND>
 ```
 
 This command:
 1. Downloads the kubeconfig for your project's cluster
 2. Creates an ephemeral pod with your project's environment
-3. Connects you to an interactive `/bin/sh` session
+3. Executes the specified command
 
-### Example
+### Examples
 
+Open an interactive shell:
 ```bash
-k9 projects shell --project my-app
+canine projects run --project my-app /bin/sh
+```
+
+Open a Rails console:
+```bash
+canine projects run --project my-app bundle exec rails c
+```
+
+Open a Django shell:
+```bash
+canine projects run --project my-app python manage.py shell
 ```
 
 Output:
@@ -82,21 +94,20 @@ Output:
 Starting a one off container in: my-app...
 Created one off pod: my-app-oneoff-abc123
 Waiting for pod to be ready... |
-# (interactive shell prompt)
 ```
 
-Type `exit` to leave the shell. The ephemeral pod is cleaned up automatically.
+The ephemeral pod is cleaned up automatically when the command exits.
 
 ### Prerequisites
 
-The shell command requires `kubectl` to be installed on your machine. See [Installation](./installation#kubectl-required-for-shell-command) for details.
+The run command requires `kubectl` to be installed on your machine. See [Installation](./installation#kubectl-required-for-run-command) for details.
 
 ## List Processes
 
 View running pods/processes for a project:
 
 ```bash
-k9 projects processes --project <PROJECT>
+canine projects processes --project <PROJECT>
 ```
 
 Output:

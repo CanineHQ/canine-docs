@@ -7,7 +7,7 @@ Manage and access your Kubernetes clusters.
 View all clusters in your account:
 
 ```bash
-k9 clusters list
+canine clusters list
 ```
 
 Output:
@@ -40,20 +40,20 @@ Output:
 Download the kubeconfig file for direct `kubectl` access to a cluster:
 
 ```bash
-k9 clusters download-kubeconfig --cluster <CLUSTER_ID>
+canine clusters download-kubeconfig --cluster <CLUSTER_ID>
 ```
 
-The kubeconfig is saved to `~/.k9/kubeconfig.yaml`.
+The kubeconfig is saved to `~/.canine/kubeconfig.yaml`.
 
 ### Example
 
 ```bash
-k9 clusters download-kubeconfig --cluster 1
+canine clusters download-kubeconfig --cluster 1
 ```
 
 Output:
 ```
-Saved kubeconfig to /Users/you/.k9/kubeconfig.yaml
+Saved kubeconfig to /Users/you/.canine/kubeconfig.yaml
 ```
 
 ### Using the Kubeconfig
@@ -61,16 +61,16 @@ Saved kubeconfig to /Users/you/.k9/kubeconfig.yaml
 Set the `KUBECONFIG` environment variable to use the downloaded config:
 
 ```bash
-export KUBECONFIG=~/.k9/kubeconfig.yaml
+export KUBECONFIG=~/.canine/kubeconfig.yaml
 kubectl get pods --all-namespaces
 ```
 
 Or specify it per-command:
 
 ```bash
-kubectl --kubeconfig ~/.k9/kubeconfig.yaml get pods
+kubectl --kubeconfig ~/.canine/kubeconfig.yaml get pods
 ```
 
 :::tip
-The `k9 projects shell` command automatically downloads and uses the correct kubeconfig for you.
+The `canine projects run` command automatically downloads and uses the correct kubeconfig for you.
 :::

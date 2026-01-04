@@ -1,13 +1,13 @@
 # Configuration
 
-The Canine CLI stores its configuration in `~/.k9/`.
+The Canine CLI stores its configuration in `~/.canine/`.
 
 ## Configuration Files
 
 | File | Purpose |
 |------|---------|
-| `~/.k9/canine.yaml` | Authentication and account settings |
-| `~/.k9/kubeconfig.yaml` | Kubernetes cluster credentials |
+| `~/.canine/canine.yaml` | Authentication and account settings |
+| `~/.canine/kubeconfig.yaml` | Kubernetes cluster credentials |
 
 ## canine.yaml
 
@@ -25,13 +25,13 @@ account: my-team
 | `token` | Your API authentication token |
 | `account` | Currently selected account slug |
 
-This file is created automatically when you run `k9 auth login`.
+This file is created automatically when you run `canine auth login`.
 
 ## kubeconfig.yaml
 
 This file stores Kubernetes cluster credentials downloaded via:
-- `k9 clusters download-kubeconfig`
-- `k9 projects shell` (downloads automatically)
+- `canine clusters download-kubeconfig`
+- `canine projects run` (downloads automatically)
 
 The format follows the standard Kubernetes kubeconfig schema.
 
@@ -40,13 +40,13 @@ The format follows the standard Kubernetes kubeconfig schema.
 For self-hosted Canine installations, specify a custom host during login:
 
 ```bash
-k9 auth login --token <TOKEN> --host https://canine.example.com
+canine auth login --token <TOKEN> --host https://canine.example.com
 ```
 
 ## Directory Structure
 
 ```
-~/.k9/
+~/.canine/
 ├── canine.yaml       # Auth credentials
 └── kubeconfig.yaml   # Cluster credentials
 ```
@@ -56,8 +56,8 @@ k9 auth login --token <TOKEN> --host https://canine.example.com
 To remove all CLI configuration:
 
 ```bash
-k9 auth logout
-rm -rf ~/.k9
+canine auth logout
+rm -rf ~/.canine
 ```
 
 ## Security Considerations
@@ -67,6 +67,6 @@ rm -rf ~/.k9
 - Both files are stored with default file permissions. Consider restricting access:
 
 ```bash
-chmod 600 ~/.k9/canine.yaml
-chmod 600 ~/.k9/kubeconfig.yaml
+chmod 600 ~/.canine/canine.yaml
+chmod 600 ~/.canine/kubeconfig.yaml
 ```
