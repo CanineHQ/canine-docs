@@ -76,4 +76,4 @@ Install kubectl: https://kubernetes.io/docs/tasks/tools/
 
 ## Next Steps
 
-After installation, [authenticate with your API token](./authentication).
+After installation, [authenticate with your API token](./02-authentication.md).
