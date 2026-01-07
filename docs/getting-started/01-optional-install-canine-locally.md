@@ -14,9 +14,9 @@ Canine can be installed locally by running
 curl -sSL https://raw.githubusercontent.com/czhu12/canine/refs/heads/main/install/install.sh | bash
 ```
 
-Navigate to [http://localhost:3456](http://localhost:3456) and you should see a welcome page, and a prompt to add your Github token.
+Navigate to [http://localhost:3456](http://localhost:3456) and you should see a welcome page, and a prompt to add your GitHub token.
 
-Go to your Github profile's [tokens page](https://github.com/settings/tokens), and click **Generate new token (classic).** Give your token a name and make sure to select the permissions **`repo`**, **`write:packages`**, and **`delete:packages`**
+Go to your GitHub profile's [tokens page](https://github.com/settings/tokens), and click **Generate new token (classic).** Give your token a name and make sure to select the permissions **`repo`**, **`write:packages`**, and **`delete:packages`**
 
 <figure><img src="/img/quickstart/github-token.avif" alt=""/><figcaption></figcaption></figure>
 
