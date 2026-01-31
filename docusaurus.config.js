@@ -11,7 +11,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Canine',
-  tagline: 'API, SDK, and CLI for Canine: An Open-Source Alternative to Heroku, Render, Fly.io, etc',
+  tagline: 'Canine turns your Kubernetes cluster into a developer-friendly PaaS',
   favicon: 'img/favicon.ico',
 
   staticDirectories: ['static'],
@@ -66,10 +66,16 @@ const config = {
     ({
       // Replace with your project's social card
       image: 'img/cover-with-text.jpg',
+      colorMode: {
+        defaultMode: 'dark',
+        disableSwitch: false,
+        respectPrefersColorScheme: true,
+      },
       navbar: {
         logo: {
           alt: 'Canine Logo',
           src: 'img/logo.png',
+          srcDark: 'img/logo-dark.webp',
         },
         items: [
           {
@@ -81,6 +87,11 @@ const config = {
           {
             type: 'html',
             value: '<a href="/swagger/page.html" target="_blank">API Reference</a>',
+            position: 'left',
+          },
+          {
+            to: '/about',
+            label: 'About',
             position: 'left',
           },
           {

@@ -3,7 +3,6 @@ import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import HomepageFeatures from '@site/src/components/HomepageFeatures';
-import HomepageContent from '@site/src/components/HomepageContent.mdx';
 
 import Heading from '@theme/Heading';
 import styles from './index.module.css';
@@ -21,7 +20,7 @@ function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/docs/getting-started/">
-            Canine Quick Start - 5min ⏱️
+            Get Started
           </Link>
         </div>
       </div>
@@ -34,13 +33,10 @@ export default function Home() {
   return (
     <Layout
       title={`${siteConfig.tagline} | ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      description="Canine turns your Kubernetes cluster into a developer-friendly PaaS.">
       <HomepageHeader />
       <main>
         <HomepageFeatures />
-        <div className="container margin-top--xl margin-bottom--lg">
-          <HomepageContent />
-        </div>
       </main>
     </Layout>
   );

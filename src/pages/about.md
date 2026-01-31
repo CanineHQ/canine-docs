@@ -1,3 +1,5 @@
+# About Canine
+
 ## Why does Canine exist?
 
 As a cofounder of a previous start up, I saw first hand how the cost of hosting a web app could explode over time.
@@ -8,7 +10,7 @@ As it turns out, the cost you pay to host your app is only a fraction of the tot
 
 I'll walk through the history of our IT spend and see how it grew over time. (These are all based on my memory, and may not be 100% accurate, but hopefully they tell the story well enough.)
 
-#### At Launch
+### At Launch
 
 | Service     | Spend (monthly) |
 | ----------- | --------------- |
@@ -26,7 +28,7 @@ Interesting to note, the cost of hosting our app (Heroku) was a tiny portion of 
 
 By year 1, we had grown our team (40+), and added a few more tools to our tech stack.
 
-#### Year 1
+### Year 1
 
 | Service     | Spend (monthly) |
 | ----------- | --------------- |
@@ -45,15 +47,13 @@ By year 1, we had grown our team (40+), and added a few more tools to our tech s
 
 It's one thing if the reason for the increase is because our product started needing more compute, but that was not the case for a lot of the things we were using. The famous [SSO tax hit us hard](https://sso.tax/), and about half our vendors grew by 20-50%. What's more, it was basically impossible to get any transparency in pricing. One year, our Heroku bill was 100k, the next year, it was 200k for practically the same usage, all of it negotiated over email, with no idea what kinds of discounts our peers were getting.
 
-#### Year 2, 3...
+### Year 2, 3...
 
-
-
-Costs only grew from here. Peaking at a \~$1M in annual spend within 4 years.
+Costs only grew from here. Peaking at a ~$1M in annual spend within 4 years.
 
 A large chunk of the tools we were using have open source versions, or open source alternatives, but we could never justify hosting them ourselves since we really had no idea what to expect. Most open source installations were simple enough, normally just expecting a server that we can run them on. But what about health checks? What about monitoring? What about alerting? What about logging? There must be something better.
 
-#### Year 4:
+### Year 4
 
 We started our migration to move off some of our more expensive infrastructure providers, and quick discovered that it's not that easy. I won't go into the full details, but just to give you an idea, one task that took a few weeks to resolve was chasing down and upgrading all the integrations that pinned our production IP's for security reasons, that we aren't able to take with us to the new infrastructure. The net result was that we cut costs by over 70% but it was a major, major project.
 
@@ -77,4 +77,5 @@ It also makes up for some of the defects that are missing from out-of-the-box Ku
 ### Reason #2: The rich ecosystem of third party applications
 
 Helm is a package manager for Kubernetes that makes it trivial to host third party applications. Thanks to Helm, basically every single open source software application can be easily hosted through Canine. This makes it trivially easy to, for instance, deploy a hosted version of Sentry!
+
 See the full list of supported applications [here](https://artifacthub.io/).
