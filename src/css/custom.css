@@ -123,10 +123,8 @@
 
 .menu__list-item-collapsible .menu__link {
   font-weight: 600;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--ifm-color-emphasis-600);
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-700);
 }
 
 .menu__list .menu__list {
