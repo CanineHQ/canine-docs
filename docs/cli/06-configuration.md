@@ -48,7 +48,10 @@ canine auth login --token <TOKEN> --host https://canine.example.com
 ```
 ~/.canine/
 ├── canine.yaml       # Auth credentials
-└── kubeconfig.yaml   # Cluster credentials
+├── kubeconfig.yaml   # Cluster credentials
+└── src/              # Local environment (created by `canine local start`)
+    ├── docker-compose.yml
+    └── .env
 ```
 
 ## Clearing Configuration

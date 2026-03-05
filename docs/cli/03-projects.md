@@ -31,26 +31,26 @@ Output:
 Trigger a deployment for a project:
 
 ```bash
-canine projects deploy --project <PROJECT>
+canine projects deploy --name <PROJECT>
 ```
 
 ### Options
 
 | Option | Description |
 |--------|-------------|
-| `--project <PROJECT>` | Project name (required) |
+| `--name <PROJECT>` | Project name (required) |
 | `--skip-build` | Skip the build step and deploy existing image |
 
 ### Examples
 
 Deploy with a new build:
 ```bash
-canine projects deploy --project my-app
+canine projects deploy --name my-app
 ```
 
 Deploy without rebuilding:
 ```bash
-canine projects deploy --project my-app --skip-build
+canine projects deploy --name my-app --skip-build
 ```
 
 Output:
@@ -127,3 +127,33 @@ Output:
 | `Succeeded` | Pod completed successfully |
 | `Failed` | Pod failed |
 | `Unknown` | Status cannot be determined |
+
+## View Logs
+
+Get logs from a running process:
+
+```bash
+canine projects logs --project <PROJECT>
+```
+
+If `--process` is not specified, you'll be prompted to select a process interactively.
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `--project <PROJECT>` | Project name (required) |
+| `--process <PROCESS>` | Process name (interactive selection if omitted) |
+| `--tail` | Follow log output in real-time |
+
+### Examples
+
+View logs for a specific process:
+```bash
+canine projects logs --project my-app --process my-app-web-abc123
+```
+
+Follow logs in real-time:
+```bash
+canine projects logs --project my-app --tail
+```

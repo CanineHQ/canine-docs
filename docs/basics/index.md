@@ -11,14 +11,17 @@ Welcome to the Basics section of Canine documentation. This section covers the f
 
 ## Core Concepts
 
-### [Clusters](./01-clusters.md)
+### [Clusters](./01-clusters/index.md)
 Learn how to connect and manage Kubernetes clusters with Canine. Understand cluster configuration, authentication, and best practices for multi-cluster deployments.
+- **[Cluster Packages](./01-clusters/01-cluster-packages.md)** - Essential system components (nginx-ingress, cert-manager, metrics-server)
+- **[Build Clouds](./01-clusters/02-build-clouds.md)** - Kubernetes-native image building
 
 ### [Projects](./02-projects/index.md)
 Discover how to organize and deploy your applications:
 - **[Services](./02-projects/01-services/index.md)** - Deploy web services, background workers, and cron jobs
 - **[Processes and One-off Pods](./02-projects/02-processes-and-one-off-pods.md)** - Run temporary tasks and debugging sessions
 - **[Volumes](./02-projects/03-volumes.md)** - Manage persistent storage for your applications
+- **[Notifiers](./02-projects/07-notifiers.md)** - Deployment notifications for Slack, Discord, Teams, and Google Chat
 
 ### [Add-ons](./03-add-ons.md)
 Extend your applications with pre-configured add-ons like databases, caching systems, and monitoring tools.
@@ -35,4 +38,4 @@ If you're new to Canine, we recommend starting with the [Getting Started guide](
 - **One-Click Add-ons** - Deploy databases and other services with pre-configured settings
 - **Seamless Integrations** - Connect with GitHub, monitoring tools, and more
 
-Ready to explore? Start with [Clusters](./01-clusters.md) to learn how Canine manages your Kubernetes infrastructure.
+Ready to explore? Start with [Clusters](./01-clusters/index.md) to learn how Canine manages your Kubernetes infrastructure.
