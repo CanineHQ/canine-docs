@@ -19,9 +19,11 @@ brew tap caninehq/canine
 brew install canine
 ```
 
-### Linux / Manual Install
+### Linux
 
-Download the latest release from [GitHub Releases](https://github.com/CanineHQ/cli/releases) and extract to your PATH.
+```bash
+curl -sSL https://raw.githubusercontent.com/CanineHQ/cli/main/install.sh | sh
+```
 
 ## Getting Started
 
@@ -47,10 +49,12 @@ canine projects list
 
 | Command | Description |
 |---------|-------------|
-| `canine auth` | Manage authentication and accounts |
-| `canine projects` | Manage projects (list, deploy, run, processes) |
-| `canine clusters` | Manage clusters and kubeconfig |
-| `canine builds` | View and manage builds |
+| `canine auth` | Manage authentication (login, logout, status) |
 | `canine accounts` | Switch between accounts |
+| `canine projects` | Manage projects (list, deploy, run, logs, processes) |
+| `canine clusters` | Manage clusters (list, kubeconfig, connect) |
+| `canine builds` | View and manage builds (list, kill) |
+| `canine add-ons` | Manage add-ons (list, restart) |
+| `canine local` | Run Canine locally with Docker Compose |
 
 See the individual command pages for detailed usage.

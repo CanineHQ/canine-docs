@@ -74,3 +74,31 @@ kubectl --kubeconfig ~/.canine/kubeconfig.yaml get pods
 :::tip
 The `canine projects run` command automatically downloads and uses the correct kubeconfig for you.
 :::
+
+## Connect via Telepresence
+
+Connect to a cluster's network using telepresence, allowing you to access internal services from your local machine:
+
+```bash
+canine clusters connect --cluster <CLUSTER>
+```
+
+If `--cluster` is omitted, you'll be prompted to select a cluster interactively.
+
+### Options
+
+| Option | Description |
+|--------|-------------|
+| `--cluster <CLUSTER>` | Cluster name (interactive selection if omitted) |
+
+### Prerequisites
+
+Telepresence must be installed on your machine. Install it from [telepresence.io](https://www.telepresence.io/docs/latest/install/).
+
+### Example
+
+```bash
+canine clusters connect --cluster staging
+```
+
+Once connected, you can access services running in the cluster using their internal DNS names (e.g., `my-app-web.my-app.svc.cluster.local`).

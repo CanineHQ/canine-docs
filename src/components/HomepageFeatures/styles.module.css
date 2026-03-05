@@ -1,22 +1,49 @@
 .features {
   display: flex;
   align-items: center;
-  padding: 2rem 0;
+  padding: 4rem 0;
   width: 100%;
 }
 
+.featureCard {
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  height: 100%;
+}
+
+.featureCard:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+[data-theme='dark'] .featureCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
 .featureSvg {
-  height: 200px;
-  width: 200px;
+  height: 160px;
+  width: 160px;
+  border-radius: 8px;
+  margin-bottom: 1rem;
 }
 
 .featureLink {
   color: inherit;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color 0.15s;
+  font-weight: 600;
 }
 
 .featureLink:hover {
   color: var(--ifm-color-primary);
   text-decoration: none;
+}
+
+.featureDescription {
+  font-size: 0.9rem;
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.6;
 }

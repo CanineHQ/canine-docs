@@ -31,20 +31,27 @@ brew untap caninehq/canine
 
 ## Linux
 
-Download the appropriate binary from [GitHub Releases](https://github.com/CanineHQ/cli/releases):
+The quickest way to install on Linux is with the install script:
 
-- **x86_64**: `canine-linux-x86_64.tar.gz`
-- **ARM64**: `canine-linux-aarch64.tar.gz`
+```bash
+curl -sSL https://raw.githubusercontent.com/CanineHQ/cli/main/install.sh | sh
+```
 
-Extract and install:
+This automatically detects your architecture (x86_64 or ARM64) and installs the latest release to `/usr/local/bin`.
+
+### Manual Install
+
+Alternatively, download the binary directly from [GitHub Releases](https://github.com/CanineHQ/cli/releases):
 
 ```bash
 # For x86_64
-tar -xzf canine-linux-x86_64.tar.gz
+curl -sL https://github.com/CanineHQ/cli/releases/latest/download/canine-linux-amd64 -o canine
+chmod +x canine
 sudo mv canine /usr/local/bin/
 
 # For ARM64
-tar -xzf canine-linux-aarch64.tar.gz
+curl -sL https://github.com/CanineHQ/cli/releases/latest/download/canine-linux-arm64 -o canine
+chmod +x canine
 sudo mv canine /usr/local/bin/
 ```
 
