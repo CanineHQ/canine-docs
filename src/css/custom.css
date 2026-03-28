@@ -34,7 +34,7 @@
 
   --ifm-navbar-height: 3.5rem;
   --ifm-navbar-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.08);
-  --ifm-navbar-background-color: rgba(255, 255, 255, 0.8);
+  --ifm-navbar-background-color: #ffffff;
 
   --ifm-footer-background-color: #f8fafc;
   --ifm-footer-color: #64748b;
@@ -60,7 +60,7 @@
 
   --ifm-background-color: #0f172a;
   --ifm-background-surface-color: #1e293b;
-  --ifm-navbar-background-color: rgba(15, 23, 42, 0.85);
+  --ifm-navbar-background-color: #0f172a;
   --ifm-footer-background-color: #0c1322;
 
   --ifm-toc-border-color: #1e293b;
@@ -77,6 +77,25 @@
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--ifm-toc-border-color);
   box-shadow: none;
+  z-index: 200;
+}
+
+/* ── Mobile sidebar ───────────────────────────────── */
+@media (max-width: 996px) {
+  .navbar-sidebar {
+    z-index: 199;
+    top: var(--ifm-navbar-height);
+    height: calc(100vh - var(--ifm-navbar-height));
+    background-color: #f8fafc;
+  }
+
+  [data-theme='dark'] .navbar-sidebar {
+    background-color: #1e293b;
+  }
+
+  .navbar-sidebar__backdrop {
+    top: var(--ifm-navbar-height);
+  }
 }
 
 .navbar__title {
