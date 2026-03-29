@@ -75,7 +75,7 @@ const sidebars = {
     },
     {
       type: 'doc',
-      id: 'resources/04-ejecting-from-canine',
+      id: 'resources/ejecting-from-canine',
       label: '🚪 Ejecting from Canine',
       className: 'sidebar-icon',
     },
