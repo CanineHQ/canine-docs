@@ -1,67 +1,32 @@
 ---
-sidebar_position: 0
+sidebar_position: 1
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Ejecting from Canine
+# Ejecting with Portainer
 
-Move your Canine-managed project to CI/CD in three steps: download your manifests, add them to your repo, and drop in a pipeline file.
+If your cluster is managed through Portainer, you can use a Portainer API token instead of a raw kubeconfig when [ejecting from Canine](./ejecting-from-canine). The pipeline fetches a kubeconfig from Portainer's API at deploy time — no static kubeconfig to rotate.
 
-## Step 1: Download Your Manifests
+This guide assumes you've already completed **Steps 1 and 2** from the [Ejecting from Canine](./ejecting-from-canine) guide (downloading manifests and adding them to your repo).
 
-Go to your cluster page in Canine and click **Download All YAML Files**. This gives you a zip organized by namespace:
+## Step 1: Create a Portainer Access Token
 
-```
-my-cluster/
-  my-project-namespace/
-    web.yaml              # Deployment
-    web-service.yaml      # Service
-    web-ingress.yaml      # Ingress
-    my-project.yaml       # ConfigMap (env vars)
-    cleanup.yaml          # CronJob (if any)
-    worker.yaml           # Background worker Deployment (if any)
-    ...
-```
+1. Log in to Portainer
+2. Go to **My Account > Access tokens > Add access token**
+3. Give it a descriptive name (e.g. `github-actions-deploy`)
+4. Copy the token — you'll store it as a CI secret
 
-You can also download your kubeconfig from the same page via **Download Kubeconfig File** — you'll need it for CI secrets in Step 3.
+## Step 2: Find your Endpoint ID
 
-## Step 2: Add Manifests to Your Repo
-
-Drop the exported YAML files into a `k8s/` directory in your application's repository:
+Your cluster's endpoint ID is visible in the Portainer URL when viewing the cluster:
 
 ```
-my-repo/
-  k8s/
-    namespace.yaml
-    configmap.yaml
-    deployment.yaml
-    service.yaml
-    ingress.yaml
-    cronjob.yaml          # if applicable
-    worker.yaml           # if applicable
-  Dockerfile
-  ...
+https://portainer.example.com/#!/2/kubernetes/dashboard
+                                  ^
+                                  endpoint ID is 2
 ```
-
-### Clean up the exported files
-
-Remove auto-generated Kubernetes metadata from each file. Delete these fields:
-
-- `metadata.managedFields`
-- `metadata.resourceVersion`
-- `metadata.uid`
-- `metadata.creationTimestamp`
-- `metadata.generation`
-- `status` (entire section)
-- `metadata.annotations.rolloutTimestamp`
-
-The remaining YAML is your source of truth going forward.
-
-### Secrets
-
-Don't commit your Secret YAML to git. Instead, store each secret value in your CI provider's secret store and create the Kubernetes Secret in the pipeline. This is handled in the workflows below.
 
 ## Step 3: Add the CI/CD Pipeline
 
@@ -81,6 +46,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   NAMESPACE: my-namespace              # your project's namespace
+  PORTAINER_ENDPOINT_ID: "2"           # your cluster's endpoint ID in Portainer
 
 jobs:
   build:
@@ -124,10 +90,26 @@ jobs:
 
     - uses: azure/setup-kubectl@v4
 
-    - name: Configure kubeconfig
+    - name: Fetch kubeconfig from Portainer
       run: |
         mkdir -p $HOME/.kube
-        echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+        curl -sk \
+          -H "X-API-Key: ${{ secrets.PORTAINER_TOKEN }}" \
+          "${{ secrets.PORTAINER_URL }}/api/kubernetes/config" \
+          > /tmp/full-kubeconfig.json
+
+        # Filter to just your cluster's endpoint
+        python3 -c "
+        import json, yaml
+        with open('/tmp/full-kubeconfig.json') as f:
+            kc = json.load(f)
+        endpoint = '${{ env.PORTAINER_ENDPOINT_ID }}'
+        kc['clusters'] = [c for c in kc['clusters'] if c['cluster']['server'].endswith(f'/api/endpoints/{endpoint}/kubernetes')]
+        cluster_name = kc['clusters'][0]['name']
+        kc['contexts'] = [c for c in kc['contexts'] if c['context']['cluster'] == cluster_name]
+        kc['current-context'] = kc['contexts'][0]['name']
+        print(yaml.dump(kc))
+        " > $HOME/.kube/config
 
     - name: Create secrets
       run: |
@@ -159,7 +141,8 @@ Add these under your repo's **Settings > Secrets and variables > Actions**:
 
 | Secret | How to get it |
 |---|---|
-| `KUBECONFIG` | Base64-encode the kubeconfig you downloaded: `base64 -w 0 < my-cluster-kubeconfig.yml` |
+| `PORTAINER_URL` | Your Portainer instance URL (e.g. `https://portainer.example.com`) |
+| `PORTAINER_TOKEN` | Portainer access token from Step 1 |
 | `SECRET_KEY_BASE` | Copy from Canine's environment variables |
 | `DATABASE_PASSWORD` | Copy from Canine's environment variables |
 
@@ -179,6 +162,7 @@ variables:
   REGISTRY: registry.gitlab.com
   IMAGE_NAME: $CI_PROJECT_PATH
   NAMESPACE: my-namespace              # your project's namespace
+  PORTAINER_ENDPOINT_ID: "2"           # your cluster's endpoint ID in Portainer
 
 build:
   stage: build
@@ -200,8 +184,25 @@ deploy:
   stage: deploy
   image: bitnami/kubectl:latest
   before_script:
+    - apk add --no-cache curl python3 py3-yaml
     - mkdir -p $HOME/.kube
-    - echo "$KUBECONFIG" | base64 -d > $HOME/.kube/config
+    - |
+      curl -sk \
+        -H "X-API-Key: $PORTAINER_TOKEN" \
+        "$PORTAINER_URL/api/kubernetes/config" \
+        > /tmp/full-kubeconfig.json
+
+      python3 -c "
+      import json, yaml
+      with open('/tmp/full-kubeconfig.json') as f:
+          kc = json.load(f)
+      endpoint = '$PORTAINER_ENDPOINT_ID'
+      kc['clusters'] = [c for c in kc['clusters'] if c['cluster']['server'].endswith(f'/api/endpoints/{endpoint}/kubernetes')]
+      cluster_name = kc['clusters'][0]['name']
+      kc['contexts'] = [c for c in kc['contexts'] if c['context']['cluster'] == cluster_name]
+      kc['current-context'] = kc['contexts'][0]['name']
+      print(yaml.dump(kc))
+      " > $HOME/.kube/config
   script:
     # Create secrets
     - |
@@ -234,7 +235,8 @@ Add these under your project's **Settings > CI/CD > Variables**:
 
 | Variable | Type | How to get it |
 |---|---|---|
-| `KUBECONFIG` | Variable (masked) | Base64-encode the kubeconfig you downloaded: `base64 -w 0 < my-cluster-kubeconfig.yml` |
+| `PORTAINER_URL` | Variable (masked) | Your Portainer instance URL (e.g. `https://portainer.example.com`) |
+| `PORTAINER_TOKEN` | Variable (masked) | Portainer access token from Step 1 |
 | `SECRET_KEY_BASE` | Variable (masked) | Copy from Canine's environment variables |
 | `DATABASE_PASSWORD` | Variable (masked) | Copy from Canine's environment variables |
 
@@ -251,61 +253,12 @@ Add one `--from-literal` line per secret env var in the script. `CI_REGISTRY_USE
 
 Removing a project from Canine does **not** delete your running workloads — your app stays up.
 
-## Pre-deploy Commands (Migrations)
+## How it works
 
-If you had a `predeploy_command` in Canine (e.g., `rake db:migrate`), add a step before "Apply manifests" in your pipeline:
+Portainer's `/api/kubernetes/config` endpoint returns a kubeconfig where the server URL points to Portainer's kubectl proxy:
 
-<Tabs>
-<TabItem value="github" label="GitHub Actions" default>
-
-```yaml
-    - name: Run migrations
-      run: |
-        kubectl run migrate-${{ github.sha }} \
-          --namespace=${{ env.NAMESPACE }} \
-          --image=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.digest }} \
-          --restart=Never --rm --wait \
-          --override-type=strategic \
-          --overrides='{"spec":{"containers":[{"name":"migrate-${{ github.sha }}","envFrom":[{"configMapRef":{"name":"${{ env.NAMESPACE }}"}},{"secretRef":{"name":"${{ env.NAMESPACE }}"}}]}]}}' \
-          --command -- bundle exec rake db:migrate
+```
+https://portainer.example.com/api/endpoints/2/kubernetes
 ```
 
-</TabItem>
-<TabItem value="gitlab" label="GitLab CI/CD">
-
-```yaml
-    # Add before "Apply manifests" in the deploy script
-    - |
-      kubectl run migrate-$CI_COMMIT_SHORT_SHA \
-        --namespace=$NAMESPACE \
-        --image=$CI_REGISTRY/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA \
-        --restart=Never --rm --wait \
-        --override-type=strategic \
-        --overrides='{"spec":{"containers":[{"name":"migrate-'"$CI_COMMIT_SHORT_SHA"'","envFrom":[{"configMapRef":{"name":"'"$NAMESPACE"'"}},{"secretRef":{"name":"'"$NAMESPACE"'"}}]}]}}' \
-        --command -- bundle exec rake db:migrate
-```
-
-</TabItem>
-</Tabs>
-
-## Reference: Canine to Kubernetes Mapping
-
-| Canine | What's in the zip |
-|---|---|
-| Service (web) | `deployment.yaml` + `service.yaml` + `ingress.yaml` |
-| Service (background) | `deployment.yaml` with a `command` (no Service/Ingress) |
-| Service (cron) | `cronjob.yaml` |
-| Environment Variables (config) | `configmap.yaml` |
-| Environment Variables (secret) | Create via CI secrets (not in zip) |
-| Domain | Host rules inside `ingress.yaml` |
-| Health Check URL | `livenessProbe` / `readinessProbe` in deployment |
-| Resource Constraints | `resources.requests` / `resources.limits` in deployment |
-| Replicas | `spec.replicas` in deployment |
-| Pre-deploy Command | Kubernetes Job in CI (see above) |
-| Autodeploy on push | `on: push` / `only: main` trigger in CI |
-
-
-
-:::info Using Portainer?
-If your cluster is managed through Portainer, see [Ejecting with Portainer](./ejecting-with-portainer) for how to use a Portainer API token instead of a raw kubeconfig.
-:::
+All kubectl commands route through this proxy. Portainer enforces access control and provides audit logging. The rest of the pipeline (apply manifests, update image, rollout) works exactly the same as a direct kubeconfig approach — the only difference is where the kubeconfig comes from.
