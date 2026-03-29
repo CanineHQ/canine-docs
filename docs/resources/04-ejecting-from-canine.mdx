@@ -25,10 +25,7 @@ my-cluster/
     ...
 ```
 
-You'll also need cluster credentials for CI. How you get them depends on your setup:
-
-- **Direct cluster access (no Portainer):** Download your kubeconfig from the same page via **Download Kubeconfig File**.
-- **Portainer:** Create a Portainer API access token instead. Go to **My Account > Access tokens > Add access token** in Portainer. You'll also need your Portainer URL and the endpoint ID for your cluster (visible in the Portainer URL when viewing the cluster, e.g. `https://portainer.example.com/#!/2/kubernetes/dashboard` — the endpoint ID is `2`).
+You can also download your kubeconfig from the same page via **Download Kubeconfig File** — you'll need it for CI secrets in Step 3.
 
 ## Step 2: Add Manifests to Your Repo
 
@@ -169,130 +166,6 @@ Add these under your repo's **Settings > Secrets and variables > Actions**:
 Add one `--from-literal` line per secret env var in the "Create secrets" step. `GITHUB_TOKEN` is provided automatically for ghcr.io.
 
 </TabItem>
-<TabItem value="github-portainer" label="GitHub Actions + Portainer">
-
-If your cluster is managed through Portainer, you can use a Portainer API token instead of a raw kubeconfig. The pipeline fetches a kubeconfig from Portainer's API at deploy time — no static kubeconfig to rotate.
-
-Create `.github/workflows/deploy.yml`:
-
-```yaml
-name: Build and Deploy
-
-on:
-  push:
-    branches: [main]
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  NAMESPACE: my-namespace              # your project's namespace
-  PORTAINER_ENDPOINT_ID: "2"           # your cluster's endpoint ID in Portainer
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    outputs:
-      digest: ${{ steps.build.outputs.digest }}
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - uses: docker/login-action@v3
-      with:
-        registry: ${{ env.REGISTRY }}
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        tags: |
-          type=sha,prefix=
-          type=raw,value=latest
-
-    - id: build
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        push: true
-        tags: ${{ steps.meta.outputs.tags }}
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - uses: azure/setup-kubectl@v4
-
-    - name: Fetch kubeconfig from Portainer
-      run: |
-        mkdir -p $HOME/.kube
-        curl -sk \
-          -H "X-API-Key: ${{ secrets.PORTAINER_TOKEN }}" \
-          "${{ secrets.PORTAINER_URL }}/api/kubernetes/config" \
-          > /tmp/full-kubeconfig.json
-
-        # Filter to just your cluster's endpoint
-        python3 -c "
-        import json, yaml
-        with open('/tmp/full-kubeconfig.json') as f:
-            kc = json.load(f)
-        endpoint = '${{ env.PORTAINER_ENDPOINT_ID }}'
-        kc['clusters'] = [c for c in kc['clusters'] if c['cluster']['server'].endswith(f'/api/endpoints/{endpoint}/kubernetes')]
-        cluster_name = kc['clusters'][0]['name']
-        kc['contexts'] = [c for c in kc['contexts'] if c['context']['cluster'] == cluster_name]
-        kc['current-context'] = kc['contexts'][0]['name']
-        print(yaml.dump(kc))
-        " > $HOME/.kube/config
-
-    - name: Create secrets
-      run: |
-        kubectl create secret generic ${{ env.NAMESPACE }} \
-          --namespace=${{ env.NAMESPACE }} \
-          --from-literal=SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }} \
-          --from-literal=DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
-          --dry-run=client -o yaml | kubectl apply -f -
-
-    - name: Apply manifests
-      run: kubectl apply -f k8s/
-
-    - name: Update image
-      run: |
-        IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ needs.build.outputs.digest }}"
-        kubectl set image deployment --all *=$IMAGE --namespace=${{ env.NAMESPACE }}
-        kubectl set image cronjob --all *=$IMAGE --namespace=${{ env.NAMESPACE }} 2>/dev/null || true
-
-    - name: Wait for rollout
-      run: |
-        for deploy in $(kubectl get deploy -n ${{ env.NAMESPACE }} -o name); do
-          kubectl rollout status $deploy -n ${{ env.NAMESPACE }} --timeout=300s
-        done
-```
-
-### Required GitHub Secrets
-
-Add these under your repo's **Settings > Secrets and variables > Actions**:
-
-| Secret | How to get it |
-|---|---|
-| `PORTAINER_URL` | Your Portainer instance URL (e.g. `https://portainer.example.com`) |
-| `PORTAINER_TOKEN` | Portainer access token from **My Account > Access tokens** |
-| `SECRET_KEY_BASE` | Copy from Canine's environment variables |
-| `DATABASE_PASSWORD` | Copy from Canine's environment variables |
-
-Add one `--from-literal` line per secret env var in the "Create secrets" step. `GITHUB_TOKEN` is provided automatically for ghcr.io.
-
-:::tip How it works
-Portainer's `/api/kubernetes/config` endpoint returns a kubeconfig where the server URL points to Portainer's kubectl proxy (e.g. `https://portainer.example.com/api/endpoints/2/kubernetes`). All kubectl commands route through Portainer, which enforces access control and auditing.
-:::
-
-</TabItem>
 <TabItem value="gitlab" label="GitLab CI/CD">
 
 Create `.gitlab-ci.yml` in the root of your repository:
@@ -368,107 +241,6 @@ Add these under your project's **Settings > CI/CD > Variables**:
 Add one `--from-literal` line per secret env var in the script. `CI_REGISTRY_USER` and `CI_REGISTRY_PASSWORD` are provided automatically for the GitLab Container Registry.
 
 </TabItem>
-<TabItem value="gitlab-portainer" label="GitLab CI/CD + Portainer">
-
-If your cluster is managed through Portainer, you can use a Portainer API token instead of a raw kubeconfig.
-
-Create `.gitlab-ci.yml` in the root of your repository:
-
-```yaml
-stages:
-  - build
-  - deploy
-
-variables:
-  REGISTRY: registry.gitlab.com
-  IMAGE_NAME: $CI_PROJECT_PATH
-  NAMESPACE: my-namespace              # your project's namespace
-  PORTAINER_ENDPOINT_ID: "2"           # your cluster's endpoint ID in Portainer
-
-build:
-  stage: build
-  image: docker:27
-  services:
-    - docker:27-dind
-  variables:
-    DOCKER_TLS_CERTDIR: "/certs"
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - docker build -t $CI_REGISTRY/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA -t $CI_REGISTRY/$IMAGE_NAME:latest .
-    - docker push $CI_REGISTRY/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA
-    - docker push $CI_REGISTRY/$IMAGE_NAME:latest
-  only:
-    - main
-
-deploy:
-  stage: deploy
-  image: bitnami/kubectl:latest
-  before_script:
-    - apk add --no-cache curl python3 py3-yaml
-    - mkdir -p $HOME/.kube
-    # Fetch kubeconfig from Portainer and filter to target cluster
-    - |
-      curl -sk \
-        -H "X-API-Key: $PORTAINER_TOKEN" \
-        "$PORTAINER_URL/api/kubernetes/config" \
-        > /tmp/full-kubeconfig.json
-
-      python3 -c "
-      import json, yaml
-      with open('/tmp/full-kubeconfig.json') as f:
-          kc = json.load(f)
-      endpoint = '$PORTAINER_ENDPOINT_ID'
-      kc['clusters'] = [c for c in kc['clusters'] if c['cluster']['server'].endswith(f'/api/endpoints/{endpoint}/kubernetes')]
-      cluster_name = kc['clusters'][0]['name']
-      kc['contexts'] = [c for c in kc['contexts'] if c['context']['cluster'] == cluster_name]
-      kc['current-context'] = kc['contexts'][0]['name']
-      print(yaml.dump(kc))
-      " > $HOME/.kube/config
-  script:
-    # Create secrets
-    - |
-      kubectl create secret generic $NAMESPACE \
-        --namespace=$NAMESPACE \
-        --from-literal=SECRET_KEY_BASE=$SECRET_KEY_BASE \
-        --from-literal=DATABASE_PASSWORD=$DATABASE_PASSWORD \
-        --dry-run=client -o yaml | kubectl apply -f -
-
-    # Apply manifests
-    - kubectl apply -f k8s/
-
-    # Update image on all deployments and cronjobs
-    - IMAGE="$CI_REGISTRY/$IMAGE_NAME:$CI_COMMIT_SHORT_SHA"
-    - kubectl set image deployment --all *=$IMAGE --namespace=$NAMESPACE
-    - kubectl set image cronjob --all *=$IMAGE --namespace=$NAMESPACE 2>/dev/null || true
-
-    # Wait for rollout
-    - |
-      for deploy in $(kubectl get deploy -n $NAMESPACE -o name); do
-        kubectl rollout status $deploy -n $NAMESPACE --timeout=300s
-      done
-  only:
-    - main
-```
-
-### Required GitLab CI/CD Variables
-
-Add these under your project's **Settings > CI/CD > Variables**:
-
-| Variable | Type | How to get it |
-|---|---|---|
-| `PORTAINER_URL` | Variable (masked) | Your Portainer instance URL (e.g. `https://portainer.example.com`) |
-| `PORTAINER_TOKEN` | Variable (masked) | Portainer access token from **My Account > Access tokens** |
-| `SECRET_KEY_BASE` | Variable (masked) | Copy from Canine's environment variables |
-| `DATABASE_PASSWORD` | Variable (masked) | Copy from Canine's environment variables |
-
-Add one `--from-literal` line per secret env var in the script. `CI_REGISTRY_USER` and `CI_REGISTRY_PASSWORD` are provided automatically for the GitLab Container Registry.
-
-:::tip How it works
-Portainer's `/api/kubernetes/config` endpoint returns a kubeconfig where the server URL points to Portainer's kubectl proxy (e.g. `https://portainer.example.com/api/endpoints/2/kubernetes`). All kubectl commands route through Portainer, which enforces access control and auditing.
-:::
-
-</TabItem>
 </Tabs>
 
 ## Step 4: Disable Canine and Verify
@@ -531,3 +303,118 @@ If you had a `predeploy_command` in Canine (e.g., `rake db:migrate`), add a step
 | Replicas | `spec.replicas` in deployment |
 | Pre-deploy Command | Kubernetes Job in CI (see above) |
 | Autodeploy on push | `on: push` / `only: main` trigger in CI |
+
+---
+
+## Using Portainer
+
+If your cluster is managed through Portainer, you can use a Portainer API token instead of a raw kubeconfig. The pipeline fetches a kubeconfig from Portainer's API at deploy time — no static kubeconfig to rotate.
+
+### Create a Portainer Access Token
+
+1. Log in to Portainer
+2. Go to **My Account > Access tokens > Add access token**
+3. Copy the token — you'll store it as a CI secret
+
+### Find your Endpoint ID
+
+Your cluster's endpoint ID is visible in the Portainer URL when viewing the cluster, e.g. `https://portainer.example.com/#!/2/kubernetes/dashboard` — the endpoint ID is `2`.
+
+### Pipeline Changes
+
+The only difference from the standard pipeline is how kubeconfig is configured. Replace the "Configure kubeconfig" step with a step that fetches it from Portainer:
+
+<Tabs>
+<TabItem value="github" label="GitHub Actions" default>
+
+Add `PORTAINER_ENDPOINT_ID` to the `env` section of your workflow:
+
+```yaml
+env:
+  PORTAINER_ENDPOINT_ID: "2"           # your cluster's endpoint ID
+```
+
+Replace the "Configure kubeconfig" step with:
+
+```yaml
+    - name: Fetch kubeconfig from Portainer
+      run: |
+        mkdir -p $HOME/.kube
+        curl -sk \
+          -H "X-API-Key: ${{ secrets.PORTAINER_TOKEN }}" \
+          "${{ secrets.PORTAINER_URL }}/api/kubernetes/config" \
+          > /tmp/full-kubeconfig.json
+
+        # Filter to just your cluster's endpoint
+        python3 -c "
+        import json, yaml
+        with open('/tmp/full-kubeconfig.json') as f:
+            kc = json.load(f)
+        endpoint = '${{ env.PORTAINER_ENDPOINT_ID }}'
+        kc['clusters'] = [c for c in kc['clusters'] if c['cluster']['server'].endswith(f'/api/endpoints/{endpoint}/kubernetes')]
+        cluster_name = kc['clusters'][0]['name']
+        kc['contexts'] = [c for c in kc['contexts'] if c['context']['cluster'] == cluster_name]
+        kc['current-context'] = kc['contexts'][0]['name']
+        print(yaml.dump(kc))
+        " > $HOME/.kube/config
+```
+
+Add these secrets to your repo (**Settings > Secrets and variables > Actions**):
+
+| Secret | How to get it |
+|---|---|
+| `PORTAINER_URL` | Your Portainer instance URL (e.g. `https://portainer.example.com`) |
+| `PORTAINER_TOKEN` | The access token you created above |
+
+You no longer need the `KUBECONFIG` secret.
+
+</TabItem>
+<TabItem value="gitlab" label="GitLab CI/CD">
+
+Add `PORTAINER_ENDPOINT_ID` to the `variables` section:
+
+```yaml
+variables:
+  PORTAINER_ENDPOINT_ID: "2"           # your cluster's endpoint ID
+```
+
+Replace the `before_script` in the deploy stage with:
+
+```yaml
+  before_script:
+    - apk add --no-cache curl python3 py3-yaml
+    - mkdir -p $HOME/.kube
+    - |
+      curl -sk \
+        -H "X-API-Key: $PORTAINER_TOKEN" \
+        "$PORTAINER_URL/api/kubernetes/config" \
+        > /tmp/full-kubeconfig.json
+
+      python3 -c "
+      import json, yaml
+      with open('/tmp/full-kubeconfig.json') as f:
+          kc = json.load(f)
+      endpoint = '$PORTAINER_ENDPOINT_ID'
+      kc['clusters'] = [c for c in kc['clusters'] if c['cluster']['server'].endswith(f'/api/endpoints/{endpoint}/kubernetes')]
+      cluster_name = kc['clusters'][0]['name']
+      kc['contexts'] = [c for c in kc['contexts'] if c['context']['cluster'] == cluster_name]
+      kc['current-context'] = kc['contexts'][0]['name']
+      print(yaml.dump(kc))
+      " > $HOME/.kube/config
+```
+
+Add these variables (**Settings > CI/CD > Variables**):
+
+| Variable | Type | How to get it |
+|---|---|---|
+| `PORTAINER_URL` | Variable (masked) | Your Portainer instance URL (e.g. `https://portainer.example.com`) |
+| `PORTAINER_TOKEN` | Variable (masked) | The access token you created above |
+
+You no longer need the `KUBECONFIG` variable.
+
+</TabItem>
+</Tabs>
+
+:::tip How it works
+Portainer's `/api/kubernetes/config` endpoint returns a kubeconfig where the server URL points to Portainer's kubectl proxy (e.g. `https://portainer.example.com/api/endpoints/2/kubernetes`). All kubectl commands route through Portainer, which enforces access control and auditing. The rest of the pipeline (apply manifests, update image, rollout) works exactly the same.
+:::
