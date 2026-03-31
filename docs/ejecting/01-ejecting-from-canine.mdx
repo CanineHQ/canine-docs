@@ -1,5 +1,5 @@
 ---
-sidebar_position: 0
+sidebar_position: 2
 ---
 
 import Tabs from '@theme/Tabs';
@@ -303,3 +303,9 @@ If you had a `predeploy_command` in Canine (e.g., `rake db:migrate`), add a step
 | Replicas | `spec.replicas` in deployment |
 | Pre-deploy Command | Kubernetes Job in CI (see above) |
 | Autodeploy on push | `on: push` / `only: main` trigger in CI |
+
+
+
+:::info Using Portainer?
+If your cluster is managed through Portainer, see [Ejecting with Portainer](./ejecting-with-portainer) for how to use a Portainer API token instead of a raw kubeconfig.
+:::
