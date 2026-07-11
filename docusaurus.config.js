@@ -105,7 +105,7 @@ const config = {
           },
           {
             type: 'html',
-            value: '<a href="/swagger/page.html" target="_blank">API Reference</a>',
+            value: '<a href="/swagger/page.html" target="_blank" class="navbar__item navbar__link">API Reference</a>',
             position: 'left',
           },
           {
