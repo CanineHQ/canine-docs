@@ -42,6 +42,26 @@ Navigate to **Project > Environment Variables** to manage configuration:
 
 You can download all environment variables as a `.env` file for local development.
 
+#### Automatic Build Arguments
+
+Canine automatically injects the following build arguments into every build:
+
+| Variable | Description |
+|----------|-------------|
+| `GIT_SHA` | The Git commit SHA being built |
+| `BUILD_TIMESTAMP` | UTC timestamp of when the build started (ISO 8601) |
+
+These are available as Docker build arguments. To use them at runtime, add the following to your Dockerfile:
+
+```dockerfile
+ARG GIT_SHA
+ARG BUILD_TIMESTAMP
+ENV GIT_SHA=$GIT_SHA
+ENV BUILD_TIMESTAMP=$BUILD_TIMESTAMP
+```
+
+For buildpack-based builds, these are automatically set as environment variables.
+
 ### Preview Apps
 
 When enabled, Canine automatically creates a temporary deployment for each pull request. See [Preview Apps](./04-preview-apps.md) for detailed configuration.
